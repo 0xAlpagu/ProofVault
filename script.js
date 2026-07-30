@@ -22,38 +22,58 @@ const status = document.getElementById("status");
 
 contractAddressText.textContent = contractAddress;
 
-async function connectWallet() {
+const GIWA_CHAIN_ID = 91342;
+const GIWA_CHAIN_ID_HEX = "0x" + GIWA_CHAIN_ID.toString(16);
 
-    if (!window.ethereum) {
+async function ensureGiwaNetwork() {
+    const currentChainId = await window.ethereum.request({ method: "eth_chainId" });
+    if (currentChainId === GIWA_CHAIN_ID_HEX) return;
 
-        alert("No EVM wallet detected.");
-
-        return;
-
+    try {
+        await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: GIWA_CHAIN_ID_HEX }]
+        });
+    } catch (switchError) {
+        if (switchError.code === 4902) {
+            await window.ethereum.request({
+                method: "wallet_addEthereumChain",
+                params: [{
+                    chainId: GIWA_CHAIN_ID_HEX,
+                    chainName: "GIWA Sepolia",
+                    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+                    rpcUrls: ["https://sepolia-rpc.giwa.io"],
+                    blockExplorerUrls: ["https://sepolia-explorer.giwa.io"]
+                }]
+            });
+        } else {
+            throw switchError;
+        }
     }
+}
 
+async function connectWallet() {
+    if (!window.ethereum) {
+        alert("No EVM wallet detected.");
+        return;
+    }
+    await ensureGiwaNetwork();
     provider = new ethers.providers.Web3Provider(window.ethereum);
-
     await provider.send("eth_requestAccounts", []);
-
     signer = provider.getSigner();
-
     const address = await signer.getAddress();
-
     walletAddress.textContent = address;
-
     const network = await provider.getNetwork();
-
     networkName.textContent =
-        network.name + " (" + network.chainId + ")";
-
+        (network.chainId === GIWA_CHAIN_ID ? "GIWA Sepolia" : "Unsupported network") +
+        " (" + network.chainId + ")";
     contract = new ethers.Contract(
         contractAddress,
         contractABI,
         signer
     );
-
     loadProofs();
+}
 
 }
 
