@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProofVault</title>
+
+    <meta name="description" content="A decentralized proof storage dApp built on the GIWA Network">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="abi.js"></script>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        <h1>ProofVault</h1>
+        <p>Secure Proof Storage on GIWA</p>
+    </div>
+
+    <button id="connectWallet">
+        Connect Wallet
+    </button>
+
+</header>
+
+<main>
+
+<section class="hero">
+
+<h2>
+Store Digital Proofs Securely
+</h2>
+
+<p>
+Save immutable proof records directly on the GIWA blockchain.
+</p>
+
+</section>
+
+<section class="dashboard">
+
+<div class="card">
+
+<h3>Wallet</h3>
+
+<p id="walletAddress">
+Not Connected
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Network</h3>
+
+<p id="networkName">
+Unknown
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Contract</h3>
+
+<p id="contractAddress">
+Loading...
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Total Proofs</h3>
+
+<p id="proofCount">
+0
+</p>
+
+</div>
+
+</section>
+
+<section class="proofForm">
+
+<h2>Add New Proof</h2>
+
+<input
+id="title"
+type="text"
+placeholder="Proof Title">
+
+<textarea
+id="description"
+placeholder="Description"></textarea>
+
+<input
+id="category"
+type="text"
+placeholder="Category">
+
+<input
+id="ipfsHash"
+type="text"
+placeholder="IPFS Hash">
+
+<button id="storeProof">
+Store Proof
+</button>
+
+<p id="status"></p>
+
+</section>
+
+<section class="proofs">
+
+<h2>My Proofs</h2>
+
+<div id="proofList">
+
+<p class="empty">
+No proofs found.
+</p>
+
+</div>
+
+</section>
+
+</main>
+
+<footer>
+
+<p>
+
+Built with Solidity
+
+•
+
+GIWA Network
+
+•
+
+Ethers.js
+
+</p>
+
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
