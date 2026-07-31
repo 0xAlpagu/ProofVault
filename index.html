@@ -4,155 +4,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProofVault</title>
-
     <meta name="description" content="A decentralized proof storage dApp built on the GIWA Network">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-<script src="abi.js" defer></script>
-<script src="script.js" defer></script>
+    <script src="abi.js" defer></script>
+    <script src="script.js" defer></script>
 </head>
-
 <body>
 
-<header>
-
-    <div class="logo">
-        <h1>ProofVault</h1>
-        <p>Secure Proof Storage on GIWA</p>
+<header class="site-header">
+    <div class="wordmark">
+        <span class="seal-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40" width="34" height="34">
+                <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="1.4"/>
+                <path d="M20 12 L23 19 L20 28 L17 19 Z" fill="currentColor"/>
+            </svg>
+        </span>
+        <div class="wordmark-text">
+            <h1>ProofVault</h1>
+            <p>Secure Proof Storage on GIWA</p>
+        </div>
     </div>
-
-    <button id="connectWallet">
-        Connect Wallet
-    </button>
-
+    <button id="connectWallet" class="btn-connect">Connect Wallet</button>
 </header>
 
 <main>
 
 <section class="hero">
-
-<h2>
-Store Digital Proofs Securely
-</h2>
-
-<p>
-Save immutable proof records directly on the GIWA blockchain.
-</p>
-
+    <p class="eyebrow">GIWA Sepolia &middot; On-Chain Ledger</p>
+    <h2 class="hero-title">Every proof,<br><span class="ink-accent">permanently sealed.</span></h2>
+    <p class="hero-sub">
+        Write a record once. GIWA keeps it unedited, unerased, and provable &mdash;
+        no server to trust, no admin to ask.
+    </p>
 </section>
 
+<div class="ticker" aria-hidden="true">
+    <div class="ticker-track" id="tickerTrack"></div>
+    <div class="ticker-track" id="tickerTrackDupe"></div>
+</div>
+
 <section class="dashboard">
+    <div class="card">
+        <span class="card-label">Wallet</span>
+        <p id="walletAddress" class="card-value mono">Not Connected</p>
+    </div>
+    <div class="card">
+        <span class="card-label">Network</span>
+        <p id="networkName" class="card-value mono">Unknown</p>
+    </div>
+    <div class="card">
+        <span class="card-label">Contract</span>
+        <p id="contractAddress" class="card-value mono">Loading&hellip;</p>
+    </div>
+    <div class="card card-accent">
+        <span class="card-label">Total Proofs</span>
+        <p id="proofCount" class="card-value big">0</p>
+    </div>
+</section>
 
-<div class="card">
+<section class="how">
+    <div class="how-heading">
+        <h2>How a proof gets sealed</h2>
+        <p>Three steps, one transaction each. No intermediary holds your record.</p>
+    </div>
 
-<h3>Wallet</h3>
-
-<p id="walletAddress">
-Not Connected
-</p>
-
-</div>
-
-<div class="card">
-
-<h3>Network</h3>
-
-<p id="networkName">
-Unknown
-</p>
-
-</div>
-
-<div class="card">
-
-<h3>Contract</h3>
-
-<p id="contractAddress">
-Loading...
-</p>
-
-</div>
-
-<div class="card">
-
-<h3>Total Proofs</h3>
-
-<p id="proofCount">
-0
-</p>
-
-</div>
-
+    <div class="carousel" id="howCarousel">
+        <div class="carousel-track" id="carouselTrack">
+            <article class="how-card">
+                <span class="how-index">Write</span>
+                <h3>Describe the proof</h3>
+                <p>Title, description, category, and the IPFS hash of whatever you're vouching for &mdash; a file, a document, a snapshot.</p>
+            </article>
+            <article class="how-card">
+                <span class="how-index">Seal</span>
+                <h3>Sign the transaction</h3>
+                <p>Your wallet signs a call to the ProofVault contract on GIWA Sepolia. The record is written into the chain's history.</p>
+            </article>
+            <article class="how-card">
+                <span class="how-index">Verify</span>
+                <h3>Anyone can check it</h3>
+                <p>The proof, its timestamp, and its owner are public and permanent &mdash; readable by anyone, alterable by no one.</p>
+            </article>
+        </div>
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
 </section>
 
 <section class="proofForm">
-
-<h2>Add New Proof</h2>
-
-<input
-id="title"
-type="text"
-placeholder="Proof Title">
-
-<textarea
-id="description"
-placeholder="Description"></textarea>
-
-<input
-id="category"
-type="text"
-placeholder="Category">
-
-<input
-id="ipfsHash"
-type="text"
-placeholder="IPFS Hash">
-
-<button id="storeProof">
-Store Proof
-</button>
-
-<p id="status"></p>
-
+    <div class="form-heading">
+        <h2>Add New Proof</h2>
+        <p>Seal a new record on the ledger.</p>
+    </div>
+    <input id="title" type="text" placeholder="Proof Title" autocomplete="off">
+    <textarea id="description" placeholder="Description"></textarea>
+    <div class="field-row">
+        <input id="category" type="text" placeholder="Category" autocomplete="off">
+        <input id="ipfsHash" type="text" placeholder="IPFS Hash" autocomplete="off" class="mono">
+    </div>
+    <button id="storeProof">Store Proof</button>
+    <p id="status"></p>
 </section>
 
 <section class="proofs">
-
-<h2>My Proofs</h2>
-
-<div id="proofList">
-
-<p class="empty">
-No proofs found.
-</p>
-
-</div>
-
+    <div class="ledger-heading">
+        <h2>The Ledger</h2>
+        <p>Every proof stored in this contract, newest first.</p>
+    </div>
+    <div id="proofList">
+        <p class="empty">No proofs found.</p>
+    </div>
 </section>
 
 </main>
 
 <footer>
-
-<p>
-
-Built with Solidity
-
-•
-
-GIWA Network
-
-•
-
-Ethers.js
-
-</p>
-
+    <p>Built with Solidity &middot; GIWA Network &middot; Ethers.js</p>
 </footer>
-
-
 
 </body>
 </html>
